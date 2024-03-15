@@ -41,22 +41,28 @@ Operator: string operationStr = Console.ReadLine();
             groupController.UpdateGroupData();
             break;
         case (int)OperationType.DeleteStudent:
-
+            studentController.DeleteStudent();
             break;
         case (int)OperationType.DeleteGroup:
+            groupController.DeleteGroup();
             break;
         case (int)OperationType.GetStudentById:
+            studentController.GetStudentById();
             break;
         case (int)OperationType.GetStudentsByAge:
+            studentController.GetStudentsByAge();
             break;
         case (int)OperationType.GetAllStudents:
             studentController.GetAll();
             break;
         case (int)OperationType.GetStudentsByGroupId:
+            studentController.GetStudentsByGroupId();
             break;
         case (int)OperationType.SearchStudents:
+            studentController.SearchStudent();
             break;
         case (int)OperationType.GetGroupById:
+            groupController.GetGroupById();
             break;
         case (int)OperationType.GetAllGroups:
             groupController.GetAll();

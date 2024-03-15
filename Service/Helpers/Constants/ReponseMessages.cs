@@ -11,6 +11,7 @@ namespace Service.Helpers.Constants
         public const string DataNotFound = "Data not found";
         public const string EmptyInput = "Input cannot be empty";
         public const string WrongFormat = "Wrong input format";
+        public const string SuccessfullMessage = "Successfull operation";
 
     }
 }

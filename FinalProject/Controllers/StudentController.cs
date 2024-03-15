@@ -154,17 +154,104 @@ namespace FinalProject.Controllers
             {
                 Console.WriteLine(ex.Message);
             }
-        
+
 
         }
 
+        public void DeleteStudent()
+        {
+            Id: ConsoleColor.Cyan.ConsoleMessage("Add your id: ");
+            int id;
+            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
+            
+            if(!isCorrectFormat)
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add Id again");
+                goto Id;
+            }
+            else
+            {
+                _studentService.Delete(id);
+                ConsoleColor.Green.ConsoleMessage(ResponseMessages.SuccessfullMessage);
+            }
+        }
         public void GetAll()
         {
             var students = _studentService.GetAll();
             foreach (var student in students)
             {
-                Console.WriteLine(student.Id + " " + student.Name + " " + student.Surname + "-" + student.Age + "-" + student.Group.Name);
+                Console.WriteLine($"Id: {student.Id}, Name: {student.Name}, Surname: {student.Surname}, Age: {student.Age}, Group Name: {student.Group.Name}");
             }
+        }
+        public void GetStudentById()
+        {
+        Id: ConsoleColor.Cyan.ConsoleMessage("Add your id: ");
+            int id;
+            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
+
+            if (!isCorrectFormat)
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add Id again");
+                goto Id;
+            }
+            else
+            {
+                _studentService.GetStudentById(id);
+                ConsoleColor.Green.ConsoleMessage(ResponseMessages.SuccessfullMessage);
+            }
+        }
+        public void GetStudentsByAge()
+        {
+            Age:  ConsoleColor.Cyan.ConsoleMessage("Add Age For Search:");
+            int age;
+            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out age);
+
+            if (!isCorrectFormat)
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add Age Again");
+                goto Age;
+            }
+            else
+            {
+                _studentService.GetStudentByAge(age);
+                ConsoleColor.Green.ConsoleMessage(ResponseMessages.SuccessfullMessage);
+            }
+        }
+        public void GetStudentsByGroupId()
+        {
+        Id: ConsoleColor.Cyan.ConsoleMessage("Add Group Id: ");
+            int id;
+            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
+
+            if (!isCorrectFormat)
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add Id again");
+                goto Id;
+            }
+            else
+            {
+                _studentService.GetAllStudentsByGroupId(id);
+                ConsoleColor.Green.ConsoleMessage(ResponseMessages.SuccessfullMessage);
+            }
+        }
+        public void SearchStudent()
+        {
+            Search: ConsoleColor.Cyan.ConsoleMessage("Add search text: ");
+            string searchText = Console.ReadLine(); 
+
+            if(string.IsNullOrWhiteSpace(searchText))
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.EmptyInput);
+                goto Search;
+            }
+            else
+            {
+               var foundStudents = _studentService.SearchByNameOrSurname(searchText);
+               foreach( var foundStudent in foundStudents) 
+               {
+                    Console.WriteLine($"Id: {foundStudent.Id}, Name: {foundStudent.Name}, Surname: {foundStudent.Surname}, Age: {foundStudent.Age}, Group Name: {foundStudent.Group.Name}"); 
+               }
+            }  
         }
     }
 }

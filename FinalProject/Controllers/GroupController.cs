@@ -115,7 +115,42 @@ namespace FinalProject.Controllers
             var groups = _groupService.GetAll();
             foreach (var group in groups)
             {
-                Console.WriteLine(group.Id + "-" + group.Name + " - " + group.Teacher + " - " + group.Room);
+                Console.WriteLine($"Id: {group.Id}, Group Name: {group.Name}, Teacher's Name: {group.Teacher}, Room: {group.Room}");
+            }
+        }
+
+        public void DeleteGroup()
+        {
+            Id: ConsoleColor.Cyan.ConsoleMessage("Add Group Id:");
+            int id;
+            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
+
+            if (!isCorrectFormat)
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat);
+                goto Id;
+            }
+            else
+            {
+                _groupService.Delete(id);
+                ConsoleColor.Green.ConsoleMessage(ResponseMessages.SuccessfullMessage);
+            }
+        }
+        public void GetGroupById()
+        {
+        Id: ConsoleColor.Cyan.ConsoleMessage("Add Group Id:");
+            int id;
+            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
+
+            if (!isCorrectFormat)
+            {
+                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat);
+                goto Id;
+            }
+            else
+            {
+                var group = _groupService.GetById(id);
+                Console.WriteLine($"Id: {group.Id}, Group Name: {group.Name}, Teacher's Name: {group.Teacher}, Room: {group.Room}");
             }
         }
     }

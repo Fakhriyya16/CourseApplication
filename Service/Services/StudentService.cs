@@ -51,11 +51,10 @@ namespace Service.Services
         public List<Student> GetStudentByAge(int? age)
         {
             if (age is null) throw new ArgumentNullException();
-            List<Student> student = _studentRepository.GetAllByExpression(m => m.Age == age);
+            List<Student> students = _studentRepository.GetAllByExpression(m => m.Age == age);
 
-            if (student is null) throw new DirectoryNotFoundException();
-            return student;
-
+            if (students is null) throw new DirectoryNotFoundException();
+            return students;
         }
 
         public Student GetStudentById(int? id)
@@ -70,7 +69,7 @@ namespace Service.Services
         public List<Student> SearchByNameOrSurname(string searchText)
         {
             if (searchText is null) throw new ArgumentNullException();
-            List<Student> students = _studentRepository.Search(m => m.Name.Contains(searchText));
+            List<Student> students = _studentRepository.Search(m => m.Name.Contains(searchText) || m.Surname.Contains(searchText));
 
             if (students is null) throw new DirectoryNotFoundException();
             return students;
