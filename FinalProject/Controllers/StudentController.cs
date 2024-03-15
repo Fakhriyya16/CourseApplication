@@ -70,58 +70,101 @@ namespace FinalProject.Controllers
         }
         public void UpdateStudent()
         {
-        Id: ConsoleColor.Cyan.ConsoleMessage("Enter your id:");
-            int id;
-            bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
-
-            if (!isCorrectFormat)
+            try
             {
-                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add your Id again");
-                goto Id;
-            }
+                Id: ConsoleColor.Cyan.ConsoleMessage("Enter your id:");
+                int id;
+                bool isCorrectFormat = int.TryParse(Console.ReadLine(), out id);
 
-            Student foundStudent = _studentService.UpdateStudent(id);
-            ConsoleColor.Cyan.ConsoleMessage("Update name:");
-            foundStudent.Name = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(foundStudent.Name))
+                if (!isCorrectFormat)
+                {
+                    ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add your Id again");
+                    goto Id;
+                }
+
+                Student foundStudent = _studentService.UpdateStudent(id);
+                ConsoleColor.Cyan.ConsoleMessage("Update name:");
+                string studentName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(studentName))
+                {
+                    foundStudent.Name = _studentService.UpdateStudent(id).Name;
+                }
+                else
+                {
+                    foundStudent.Name = studentName;
+                }
+
+                ConsoleColor.Cyan.ConsoleMessage("Update surname:");
+                string studentSurname = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(studentSurname))
+                {
+                    foundStudent.Surname = _studentService.UpdateStudent(id).Surname;
+                }
+                else
+                {
+                    foundStudent.Surname = studentSurname;
+                }
+
+                Age: ConsoleColor.Cyan.ConsoleMessage("Update age:");
+                int age;
+                string result = Console.ReadLine();
+                bool isCorrectFormatOfAge = int.TryParse(result, out age);
+                if (!isCorrectFormatOfAge)
+                {
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        foundStudent.Age = _studentService.UpdateStudent(id).Age;
+                    }
+                    else
+                    {
+                        ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat);
+                        goto Age;
+                    }
+                }
+                else
+                {
+                    foundStudent.Age = age;
+                }
+
+
+
+                ConsoleColor.Cyan.ConsoleMessage("Update Group name:");
+                string newGroupName = Console.ReadLine();
+
+                Group oldGroup = _groupService.GetByName(_studentService.UpdateStudent(id).Group.Name);
+
+                if (string.IsNullOrWhiteSpace(newGroupName))
+                {
+                    foundStudent.Group.Name = oldGroup.Name;
+                }
+                else
+                {
+                    if (newGroupName == _groupService.GetByName(newGroupName).Name)
+                    {
+                        foundStudent.Group.Name = newGroupName;
+                    }
+                    else
+                    {
+                        throw new DataNotFoundException("Group with this name does not exist");
+                    }
+                }
+            }
+            
+            catch (Exception ex)
             {
-                foundStudent.Name = _studentService.UpdateStudent(id).Name;
+                Console.WriteLine(ex.Message);
             }
+        
 
-            ConsoleColor.Cyan.ConsoleMessage("Update surname:");
-            foundStudent.Surname = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(foundStudent.Surname))
+        }
+
+        public void GetAll()
+        {
+            var students = _studentService.GetAll();
+            foreach (var student in students)
             {
-                foundStudent.Surname = _studentService.UpdateStudent(id).Surname;
+                Console.WriteLine(student.Id + " " + student.Name + " " + student.Surname + "-" + student.Age + "-" + student.Group.Name);
             }
-
-        Age: ConsoleColor.Cyan.ConsoleMessage("Update age:");
-            int age;
-            bool isCorrectFormatOfAge = int.TryParse(Console.ReadLine(), out age);
-            if (!isCorrectFormatOfAge)
-            {
-                ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add your age again");
-                goto Age;
-            }
-            else
-            {
-                foundStudent.Age = _studentService.UpdateStudent(id).Age;
-            }
-
-            ConsoleColor.Cyan.ConsoleMessage("Update Group name:");
-            string newGroupName = Console.ReadLine();
-
-            Group oldGroup = _groupService.GetByName(_studentService.UpdateStudent(id).Group.Name);
-
-            if (string.IsNullOrWhiteSpace(newGroupName))
-            {
-                foundStudent.Group.Name = oldGroup.Name;
-            }
-            else
-            {
-                foundStudent.Group.Name = newGroupName;
-            }
-
         }
     }
 }

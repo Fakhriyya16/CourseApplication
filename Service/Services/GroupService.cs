@@ -3,11 +3,7 @@ using Repository.Repositories;
 using Service.Helpers.Constants;
 using Service.Helpers.Exceptions;
 using Service.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Models;
 
 namespace Service.Services
 {
@@ -73,7 +69,7 @@ namespace Service.Services
         public Group UpdateGroup(int? id)
         {
             if (id is null) throw new ArgumentNullException();
-
+            return _groupRepository.Update(id, _groupRepository.GetById(id));
         }
         public Group GetByName(string name)
         {
@@ -81,6 +77,5 @@ namespace Service.Services
             if (group is null) throw new DataNotFoundException(ResponseMessages.DataNotFound);
             return group;
         }
-
     }
 }

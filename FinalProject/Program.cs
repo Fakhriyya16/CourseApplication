@@ -37,6 +37,40 @@ Operator: string operationStr = Console.ReadLine();
         case (int)OperationType.UpdateStudent:
             studentController.UpdateStudent();
             break;
+        case (int)OperationType.UpdateGroupData:
+            groupController.UpdateGroupData();
+            break;
+        case (int)OperationType.DeleteStudent:
+
+            break;
+        case (int)OperationType.DeleteGroup:
+            break;
+        case (int)OperationType.GetStudentById:
+            break;
+        case (int)OperationType.GetStudentsByAge:
+            break;
+        case (int)OperationType.GetAllStudents:
+            studentController.GetAll();
+            break;
+        case (int)OperationType.GetStudentsByGroupId:
+            break;
+        case (int)OperationType.SearchStudents:
+            break;
+        case (int)OperationType.GetGroupById:
+            break;
+        case (int)OperationType.GetAllGroups:
+            groupController.GetAll();
+            break;
+        case (int)OperationType.GetGroupsByTeacher:
+            break;
+        case (int)OperationType.GetGroupsByRoom:
+            break;
+        case (int)OperationType.GetGroupByName:
+            break;
+        case (int)OperationType.SearchGroup:
+            break;
+        case (int)OperationType.ReturnToMenu:
+            break;
     }
 
 
