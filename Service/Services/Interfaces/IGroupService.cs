@@ -18,5 +18,6 @@ namespace Service.Services.Interfaces
         List<Group> GetAllByRoom(string room);
         List<Group> SearchByName(string searchText);
         Group GetByName(string name);
+        bool CheckAvailability(string name);
     }
 }

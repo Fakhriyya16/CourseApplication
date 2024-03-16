@@ -68,12 +68,16 @@ Operator: string operationStr = Console.ReadLine();
             groupController.GetAll();
             break;
         case (int)OperationType.GetGroupsByTeacher:
+            groupController.GetGroupsByTeacher();
             break;
         case (int)OperationType.GetGroupsByRoom:
+            groupController.GetGroupsByRoom();
             break;
         case (int)OperationType.GetGroupByName:
+            groupController.GetGroupsByName();
             break;
         case (int)OperationType.SearchGroup:
+            groupController.SearchGroup();
             break;
         case (int)OperationType.ReturnToMenu:
             break;

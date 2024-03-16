@@ -30,42 +30,41 @@ namespace Service.Services
             if (group is null) throw new DirectoryNotFoundException();
             _groupRepository.Delete(group);
         }
-
         public List<Group> GetAll()
         {
             return _groupRepository.GetAll();
         }
         public List<Group> GetAllByRoom(string room)
         {
-            if (room is null) throw new ArgumentNullException();
-            return _groupRepository.GetAllByExpression(m => m.Room == room);
-        }
+            if (string.IsNullOrWhiteSpace(room)) throw new ArgumentNullException();
+            List<Group> groups = _groupRepository.GetAllByExpression(m=>m.Room == room);
 
+            if (groups is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist,"Group","room"));
+            return groups;
+        }
         public List<Group> GetAllByTeacher(string teacher)
         {
-            if (teacher is null) throw new ArgumentNullException();
+            if (string.IsNullOrWhiteSpace(teacher)) throw new ArgumentNullException();
             List<Group> groups = _groupRepository.GetAllByExpression(m => m.Teacher == teacher);
 
             if (groups is null) throw new DirectoryNotFoundException();
             return groups;
         }
-
         public Group GetById(int? id)
         {
-            if (id is null) throw new ArgumentNullException();
+            if (id is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput, "Id"));
             Group group = _groupRepository.GetById(id);
 
-            if (group is null) throw new DirectoryNotFoundException();
+            if (group is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist,"Group","id"));
             return group;
         }
-        public List<Group> SearchByName(string searchText) //by symbol
+        public List<Group> SearchByName(string searchText) 
         {
             if (string.IsNullOrWhiteSpace(searchText)) throw new ArgumentNullException();
             List<Group> groups = _groupRepository.Search(m => m.Name.Contains(searchText));
-            if (groups is null) throw new DirectoryNotFoundException();
+            if (groups is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist,"Group","search text"));
             return groups;
         }
-
         public Group UpdateGroup(int? id)
         {
             if (id is null) throw new ArgumentNullException();
@@ -73,9 +72,17 @@ namespace Service.Services
         }
         public Group GetByName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput,"Name"));
             Group group = _groupRepository.GetByExpression(m => m.Name == name);
-            if (group is null) throw new DataNotFoundException(ResponseMessages.DataNotFound);
+            if (group is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist,"Group","name"));
             return group;
+        }
+        public bool CheckAvailability(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput, "Name"));
+            Group group = _groupRepository.GetByExpression(m => m.Name == name);
+
+            return group is null ? true : false;
         }
     }
 }

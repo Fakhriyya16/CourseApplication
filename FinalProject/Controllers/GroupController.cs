@@ -5,8 +5,11 @@ using Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Group = Domain.Models.Group;
 
 namespace FinalProject.Controllers
 {
@@ -21,37 +24,59 @@ namespace FinalProject.Controllers
 
         public void CreateGroup()
         {
-        Name: ConsoleColor.Cyan.ConsoleMessage("Add group name:");
-            string name = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(name))
+            try
             {
-                ConsoleColor.Red.ConsoleMessage(ResponseMessages.EmptyInput);
-                goto Name;
+            Name: ConsoleColor.Cyan.ConsoleMessage("Add group name:");
+                string name = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(name.Trim().ToLower()))
+                {
+                    ConsoleColor.Red.ConsoleMessage(string.Format(ResponseMessages.EmptyInput, "Name"));
+                    goto Name;
+                }
+                var availability = _groupService.CheckAvailability(name);
+                if (availability)
+                {
+                Teacher: ConsoleColor.Cyan.ConsoleMessage("Add teacher's name:");
+                    string teacher = Console.ReadLine();
+                    string namePattern = @"^[A-Z][a-z]*$";
+                    Regex regex = new(namePattern);
+
+                    if (string.IsNullOrWhiteSpace(teacher))
+                    {
+                        ConsoleColor.Red.ConsoleMessage(string.Format(ResponseMessages.EmptyInput, "Teacher's name"));
+                        goto Teacher;
+                    }
+                    Match match = regex.Match(teacher);
+                    if (!match.Success)
+                    {
+                        ConsoleColor.Red.ConsoleMessage(string.Format(ResponseMessages.WrongFormat, "name") + " " + "Name must start with uppercase letter and contain only letters");
+                        goto Teacher;
+                    }
+
+                Room: ConsoleColor.Cyan.ConsoleMessage("Add room:");
+                    string room = Console.ReadLine();
+
+                    if (string.IsNullOrWhiteSpace(room))
+                    {
+                        ConsoleColor.Red.ConsoleMessage(string.Format(ResponseMessages.EmptyInput, "Room"));
+                        goto Room;
+                    }
+
+                    _groupService.Create(new Group { Name = name, Teacher = teacher, Room = room });
+
+                    ConsoleColor.Green.ConsoleMessage("Group successfully added");
+                }
+                else
+                {
+                    ConsoleColor.Red.ConsoleMessage("A group with this name already exists. Please choose a different name for the new group:");
+                    goto Name;
+                }
             }
-
-        Teacher: ConsoleColor.Cyan.ConsoleMessage("Add teacher's name:");
-            string teacher = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(teacher))
+            catch (ArgumentNullException ex)
             {
-                ConsoleColor.Red.ConsoleMessage(ResponseMessages.EmptyInput);
-                goto Teacher;
+                ConsoleColor.Red.ConsoleMessage(ex.Message);
             }
-
-        Room: ConsoleColor.Cyan.ConsoleMessage("Add room:");
-            string room = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(room))
-            {
-                ConsoleColor.Red.ConsoleMessage(ResponseMessages.EmptyInput);
-                goto Room;
-            }
-
-            _groupService.Create(new Group { Name = name, Teacher = teacher, Room = room });
-
-            ConsoleColor.Green.ConsoleMessage("Group successfully added");
-
         }
         
         public void UpdateGroupData()
@@ -115,7 +140,7 @@ namespace FinalProject.Controllers
             var groups = _groupService.GetAll();
             foreach (var group in groups)
             {
-                Console.WriteLine($"Id: {group.Id}, Group Name: {group.Name}, Teacher's Name: {group.Teacher}, Room: {group.Room}");
+                Console.WriteLine(string.Format(ResponseMessages.GroupDataForDisplay, group.Id, group.Name, group.Teacher, group.Room));
             }
         }
 
@@ -150,7 +175,49 @@ namespace FinalProject.Controllers
             else
             {
                 var group = _groupService.GetById(id);
-                Console.WriteLine($"Id: {group.Id}, Group Name: {group.Name}, Teacher's Name: {group.Teacher}, Room: {group.Room}");
+                Console.WriteLine(string.Format(ResponseMessages.GroupDataForDisplay, group.Id, group.Name, group.Teacher, group.Room));
+            }
+        }
+        public void GetGroupsByTeacher()
+        {
+            ConsoleColor.Cyan.ConsoleMessage("Add Teacher's name: ");
+            string teacher = Console.ReadLine();
+
+            var groups = _groupService.GetAllByTeacher(teacher.Trim().ToLower());
+            foreach( var group in groups )
+            {
+                Console.WriteLine(string.Format(ResponseMessages.GroupDataForDisplay, group.Id, group.Name, group.Teacher, group.Room));
+            }  
+        }
+        public void GetGroupsByRoom()
+        {
+            ConsoleColor.Cyan.ConsoleMessage("Add Room: ");
+            string room = Console.ReadLine();
+
+            var groups = _groupService.GetAllByRoom(room.Trim().ToLower());
+            foreach (var group in groups)
+            {
+                Console.WriteLine(string.Format(ResponseMessages.GroupDataForDisplay, group.Id, group.Name, group.Teacher, group.Room));
+            }
+        }
+        public void GetGroupsByName()
+        {
+            ConsoleColor.Cyan.ConsoleMessage("Add Group Name: ");
+            string groupName = Console.ReadLine();
+
+            var group = _groupService.GetByName(groupName.Trim().ToLower());
+
+            Console.WriteLine(string.Format(ResponseMessages.GroupDataForDisplay, group.Id, group.Name, group.Teacher, group.Room));           
+        }
+        public void SearchGroup()
+        {
+            ConsoleColor.Cyan.ConsoleMessage("Add Search Text: ");
+            string searchText = Console.ReadLine();
+
+            var groups = _groupService.SearchByName(searchText.Trim().ToLower());
+            foreach (var group in groups)
+            {
+                Console.WriteLine(string.Format(ResponseMessages.GroupDataForDisplay, group.Id, group.Name, group.Teacher, group.Room));
             }
         }
     }
