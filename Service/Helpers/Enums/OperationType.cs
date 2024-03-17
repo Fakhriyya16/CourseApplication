@@ -9,7 +9,6 @@ namespace Service.Helpers.Enums
     public enum OperationType
     {
         CreateGroup = 1,
-        CreateStudent,
         UpdateStudent,
         UpdateGroupData,
         DeleteStudent,
@@ -25,6 +24,8 @@ namespace Service.Helpers.Enums
         GetGroupsByRoom,
         GetGroupByName,
         SearchGroup,
+        ChangeGroup,
         ReturnToMenu,
+        LogOut,
     }
 }

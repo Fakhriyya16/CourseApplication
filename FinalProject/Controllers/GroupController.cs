@@ -2,13 +2,7 @@
 using Service.Helpers.Constants;
 using Service.Helpers.Extensions;
 using Service.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Group = Domain.Models.Group;
 
 namespace FinalProject.Controllers
@@ -90,49 +84,51 @@ namespace FinalProject.Controllers
                 ConsoleColor.Red.ConsoleMessage(ResponseMessages.WrongFormat + "Add your Id again");
                 goto Id;
             }
-
-            Group foundGroup = _groupService.UpdateGroup(id);
-
-            ConsoleColor.Cyan.ConsoleMessage("Update name of the group:");
-            string roomName = Console.ReadLine();
-
-            if(string.IsNullOrWhiteSpace(roomName))
+            try
             {
-                foundGroup.Name = _groupService.UpdateGroup(id).Name;
+                Group foundGroup = _groupService.UpdateGroup(id);
+
+                ConsoleColor.Cyan.ConsoleMessage("Update name of the group:");
+                string roomName = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(roomName))
+                {
+                    foundGroup.Name = _groupService.UpdateGroup(id).Name;
+                }
+                else
+                {
+                    foundGroup.Name = roomName;
+                }
+
+                ConsoleColor.Cyan.ConsoleMessage("Update teacher's name");
+                string teacherName = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(teacherName))
+                {
+                    foundGroup.Teacher = _groupService.UpdateGroup(id).Teacher;
+                }
+                else
+                {
+                    foundGroup.Teacher = teacherName;
+                }
+
+                ConsoleColor.Cyan.ConsoleMessage("Update room:");
+                string room = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(room))
+                {
+                    foundGroup.Room = _groupService.UpdateGroup(id).Room;
+                }
+                else
+                {
+                    foundGroup.Teacher = room;
+                }
             }
-            else
+            catch (ArgumentNullException ex)
             {
-                foundGroup.Name = roomName;
-            }
-            
-            ConsoleColor.Cyan.ConsoleMessage("Update teacher's name");
-            string teacherName = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(teacherName))
-            {
-                foundGroup.Teacher = _groupService.UpdateGroup(id).Teacher;
-            }
-            else
-            {
-                foundGroup.Teacher = teacherName;
-            }
-
-            ConsoleColor.Cyan.ConsoleMessage("Update room:");
-            string room = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(room))
-            {
-                foundGroup.Room = _groupService.UpdateGroup(id).Room;
-            }
-            else
-            {
-                foundGroup.Teacher = room;
-            }
-
-
-
-
-
+                ConsoleColor.Red.ConsoleMessage(ex.Message);
+                goto Id;
+            }       
         }
 
         public void GetAll()

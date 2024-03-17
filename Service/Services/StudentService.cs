@@ -2,25 +2,23 @@
 using Repository.Repositories.Interfaces;
 using Repository.Repositories;
 using Service.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Service.Helpers.Exceptions;
 using Service.Helpers.Constants;
+using Service.Helpers.Extensions;
 
 namespace Service.Services
 {
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
+        private readonly IGroupRepository _groupRepository;
         private int count = 1;
         public StudentService()
         {
             _studentRepository = new StudentRepository();
+            _groupRepository = new GroupRepository();
         }
-        public void Create(Student student)
+        public void RegisterStudent(Student student)
         {
             if (student is null) throw new ArgumentNullException(ResponseMessages.EmptyInput, "Student");
             student.Id = count++;
@@ -82,6 +80,37 @@ namespace Service.Services
             if (id is null) throw new ArgumentNullException();
             return _studentRepository.Update(id, _studentRepository.GetById(id));
         }
+        public Student ChangeGroup(int? id)
+        {
+            if (id is null) throw new ArgumentNullException();
+            return _studentRepository.Update(id, _studentRepository.GetById(id));
+        }
+        public bool CheckPasswordStrength(string password,string name, string surname)
+        {
+            if(password.Contains(name) || password.Contains(surname))
+            {
+                return false;
+            }
+            return true;
+        }
+        public Student GetStudentByEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email)) throw new ArgumentNullException("Email cannot be empty, please add age again ");
+            Student student = _studentRepository.GetByExpression(m => m.Email == email);
 
+            return student;
+        }
+        public bool Login(string email, string password)
+        {
+            var students = _studentRepository.GetAll();
+            foreach(var student in students)
+            {
+                if(email == student.Email && password == student.Password)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

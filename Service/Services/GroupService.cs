@@ -67,7 +67,7 @@ namespace Service.Services
         }
         public Group UpdateGroup(int? id)
         {
-            if (id is null) throw new ArgumentNullException();
+            if (id is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput,"Id"));
             return _groupRepository.Update(id, _groupRepository.GetById(id));
         }
         public Group GetByName(string name)
