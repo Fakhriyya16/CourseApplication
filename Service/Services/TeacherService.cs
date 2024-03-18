@@ -4,11 +4,6 @@ using Repository.Repositories.Interfaces;
 using Service.Helpers.Constants;
 using Service.Helpers.Exceptions;
 using Service.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Services
 {
@@ -27,11 +22,11 @@ namespace Service.Services
         }
         public void Delete(int? id)
         {
-            if (id is null) throw new ArgumentNullException();
+            if (id is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput,"Id"));
             Teacher teacher = _teacherRepository.GetById(id);
 
-            if (teacher is null) throw new DirectoryNotFoundException();
-            _teacherRepository.Delete(teacher); throw new NotImplementedException();
+            if (teacher is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist,"Teacher","id"));
+            _teacherRepository.Delete(teacher);
         }
         public List<Teacher> GetAll()
         {
@@ -40,6 +35,7 @@ namespace Service.Services
         public void GradeStudent(int id,int grade)
         {
             var student = _studentRepository.GetById(id);
+            if (student == null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist, "Student", "id"));
             student.Grade = grade;
         }
         public bool Login(string email, string password)
@@ -60,9 +56,9 @@ namespace Service.Services
             teacher.Id = count++;
             _teacherRepository.Create(teacher);
         }
-        List<Student> ITeacherService.GetAllStudents()
+        public List<Student> GetAllStudents()
         {
-            return _studentRepository.GetAll();
+           return _studentRepository.GetAll();
         }
         public List<Group> GetAllGroups()
         {
@@ -78,7 +74,7 @@ namespace Service.Services
         }
         public List<Group> SearchGroups(string searchText)
         {
-            if (string.IsNullOrWhiteSpace(searchText)) throw new ArgumentNullException();
+            if (string.IsNullOrWhiteSpace(searchText)) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput,"Search text"));
             List<Group> groups = _groupRepository.Search(m => m.Name.Contains(searchText));
             if (groups is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist, "Group", "search text"));
             return groups;

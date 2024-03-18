@@ -13,5 +13,6 @@ namespace Service.Helpers.Enums
         LoginAsStudent,
         LoginAsTeacher,
         AdminLogin,
+        Exit,
     }
 }

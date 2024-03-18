@@ -24,8 +24,6 @@ namespace Service.Helpers.Enums
         GetGroupsByRoom,
         GetGroupByName,
         SearchGroup,
-        ChangeGroup,
-        ReturnToMenu,
         LogOut,
     }
 }

@@ -22,5 +22,6 @@ namespace Service.Services.Interfaces
 
         public bool CheckPasswordStrength(string password, string name,string surname);
         public bool Login(string email, string password);
+        public Student ShowGrade(int? id);
     }
 }

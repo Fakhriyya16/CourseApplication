@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Service.Helpers.Enums
 {
     public enum StudentOperationType
@@ -15,7 +10,7 @@ namespace Service.Helpers.Enums
         GetGroupsByTeacher,
         SearchGroups,
         ChangeGroup,
-        Return,
+        ShowGrade,
         LogOut,
     }
 }

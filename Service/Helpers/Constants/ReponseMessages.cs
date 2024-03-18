@@ -14,7 +14,7 @@ namespace Service.Helpers.Constants
         public const string SuccessfullMessage = "Successfull operation";
         public const string DoesNotExist = "{0} with given {1} does not exist.";
         public const string GroupDataForDisplay = "Id: {0}, Group Name: {1}, Teacher's Name: {2}, Room: {3}";
-        public const string TeacherDataForDisplay = "Id: {0}, Name: {1}, Surname: { 2}, Email: { 3}";
+        public const string TeacherDataForDisplay = "Id: {0}, Name: {1}, Surname: {2}, Email: {3}";
         public const string StudentDataForDisplay = "Id: {0}, Name: {1}, Surname: {2}, Age: {3}, Group Name: {4}, Email: {5}";
     }
 }

@@ -15,7 +15,6 @@ namespace Service.Helpers.Enums
         GetAllGroups,
         SearchStudents,
         SearchGroups,
-        Return,
         LogOut,
     }
 }

@@ -4,7 +4,6 @@ using Repository.Repositories;
 using Service.Services.Interfaces;
 using Service.Helpers.Exceptions;
 using Service.Helpers.Constants;
-using Service.Helpers.Extensions;
 
 namespace Service.Services
 {
@@ -27,10 +26,10 @@ namespace Service.Services
 
         public void Delete(int? id)
         {
-            if (id is null) throw new ArgumentNullException();
+            if (id is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput, "Id"));
             Student student = _studentRepository.GetById(id);
 
-            if (student is null) throw new DirectoryNotFoundException();
+            if (student is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist,"Student","id"));
             _studentRepository.Delete(student);
         }
 
@@ -44,13 +43,13 @@ namespace Service.Services
             if (id is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput, "Id"));
             List<Student> students = _studentRepository.GetAllByExpression(m => m.Group.Id == id);
 
-            if (students.Count == 0) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist, "Student", "group id"));
+            if (students.Count == 0) throw new DataNotFoundException("There are no students in the group.");
             return students;
         }
 
         public List<Student> GetStudentByAge(int? age)
         {
-            if (age is null) throw new ArgumentNullException("Age cannot be empty, please add age again ");
+            if (age is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput,"Age"));
             List<Student> students = _studentRepository.GetAllByExpression(m => m.Age == age);
 
             if (students.Count == 0) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist, "Student", "age"));
@@ -68,10 +67,10 @@ namespace Service.Services
 
         public List<Student> SearchByNameOrSurname(string searchText)
         {
-            if (searchText is null) throw new ArgumentNullException("You cannot leave field empty");
-            List<Student> students = _studentRepository.Search(m => m.Name.Contains(searchText) || m.Surname.Contains(searchText));
+            if (searchText is null) throw new ArgumentNullException("You cannot leave this field empty");
+            List<Student> students = _studentRepository.Search(m => m.Name.ToLower().ToString().Contains(searchText) || m.Surname.ToLower().ToString().Contains(searchText));
 
-            if (students is null) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist, "Student", "search text"));
+            if (students.Count == 0) throw new DataNotFoundException(string.Format(ResponseMessages.DoesNotExist, "Student", "search text"));
             return students;
         }
 
@@ -82,7 +81,7 @@ namespace Service.Services
         }
         public Student ChangeGroup(int? id)
         {
-            if (id is null) throw new ArgumentNullException();
+            if (id is null) throw new ArgumentNullException(string.Format(ResponseMessages.EmptyInput,"Id"));
             return _studentRepository.Update(id, _studentRepository.GetById(id));
         }
         public bool CheckPasswordStrength(string password,string name, string surname)
@@ -111,6 +110,10 @@ namespace Service.Services
                 }
             }
             return false;
+        }
+        public Student ShowGrade(int? id)
+        {
+            return _studentRepository.GetById(id);
         }
     }
 }
